@@ -1,36 +1,107 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# BITS Corporate Website
 
-## Getting Started
+Modern corporate website for Building Innovative Technical Solutions, Limited built with Next.js 15 and Tailwind CSS v4.
 
-First, run the development server:
-
+## 🚀 Quick Start
 ```bash
+# Install dependencies
+npm install
+
+# Run development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+
+# Build for production
+npm run build
+
+# Start production server
+npm start
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) to view the site.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 📁 Project Structure
+```
+├── app/
+│   ├── (marketing)/        # Marketing pages
+│   │   ├── page.tsx        # Homepage
+│   │   ├── about/
+│   │   ├── products/
+│   │   ├── solutions/
+│   │   ├── portfolio/
+│   │   ├── partners/
+│   │   ├── technologies/
+│   │   ├── blog/
+│   │   ├── careers/
+│   │   └── contact/
+│   ├── layout.tsx
+│   └── globals.css
+├── components/
+│   ├── ui/                 # UI components
+│   ├── layout/             # Layout components
+│   └── sections/           # Homepage sections
+├── lib/
+│   ├── utils.ts
+│   └── constants.ts
+└── public/
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🎨 Tech Stack
 
-## Learn More
+- **Framework:** Next.js 15 (App Router)
+- **Styling:** Tailwind CSS v4
+- **Animations:** Framer Motion
+- **Icons:** Lucide React
+- **TypeScript:** Full type safety
 
-To learn more about Next.js, take a look at the following resources:
+## 📝 Content Management
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Adding Products
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Edit `lib/constants.ts` to add new products, stats, or services.
 
-## Deploy on Vercel
+### Adding Blog Posts
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Create new files in `app/(marketing)/blog/[slug]/page.tsx`.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Updating Company Info
+
+Edit `lib/constants.ts` for company details, address, and contact info.
+
+## 🔧 Configuration
+
+### Environment Variables
+
+Create `.env.local`:
+```env
+NEXT_PUBLIC_SITE_URL=https://bits-innovate.com
+```
+
+### Tailwind Colors
+
+Customize colors in `app/globals.css` under the `@theme` directive.
+
+## 📦 Deployment
+
+### Vercel (Recommended)
+```bash
+vercel
+```
+
+### Other Platforms
+```bash
+npm run build
+npm start
+```
+
+## 🤝 Contributing
+
+1. Create a feature branch
+2. Make your changes
+3. Test thoroughly
+4. Submit a pull request
+
+## 📄 License
+
+© 2026 Building Innovative Technical Solutions, Limited. All rights reserved.
+```
+
