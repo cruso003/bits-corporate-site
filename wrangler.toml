@@ -1,9 +1,22 @@
-# Cloudflare Pages project config (used by `wrangler pages dev/deploy`).
-name = "bits-innovate"
+# Cloudflare Worker with Static Assets. Deployed by `npx wrangler deploy`
+# after `npm run build` writes the static site to ./out.
+#
+# `name` MUST match the Worker's name in the Cloudflare dashboard.
+name = "bits-corporate-site"
+main = "worker/index.ts"
 compatibility_date = "2025-10-01"
-pages_build_output_dir = "out"
+workers_dev = true
+
+[assets]
+directory = "./out"
+binding = "ASSETS"
+html_handling = "auto-trailing-slash"
+not_found_handling = "404-page"
+
+[observability]
+enabled = true
 
 [vars]
 CONTACT_TO = "hello@bits-innovate.com"
 CONTACT_FROM = "BITS Website <website@bits-innovate.com>"
-# RESEND_API_KEY is a secret: set it in the Pages dashboard, never here.
+# RESEND_API_KEY is a secret: add it in the dashboard (Settings → Variables and Secrets), never here.

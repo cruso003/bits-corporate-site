@@ -1,13 +1,14 @@
 /**
- * Cloudflare Pages Function: POST /api/contact
+ * POST /api/contact handler.
  *
- * Env (set in Cloudflare Pages → Settings → Variables and Secrets):
+ * Env (Cloudflare → Workers & Pages → this Worker → Settings → Variables and Secrets):
  *   RESEND_API_KEY  secret, from resend.com (domain bits-innovate.com verified there)
  *   CONTACT_TO      where enquiries land, e.g. hello@bits-innovate.com
  *   CONTACT_FROM    verified sender, e.g. "BITS Website <website@bits-innovate.com>"
  */
 
-interface Env {
+export interface Env {
+  ASSETS: Fetcher;
   RESEND_API_KEY?: string;
   CONTACT_TO?: string;
   CONTACT_FROM?: string;
@@ -27,7 +28,7 @@ type Payload = Partial<
   >
 >;
 
-const json = (body: unknown, status = 200) =>
+export const json = (body: unknown, status = 200) =>
   new Response(JSON.stringify(body), {
     status,
     headers: {
@@ -48,7 +49,10 @@ const escapeHtml = (s: string) =>
       ] ?? c,
   );
 
-export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
+export async function handleContact(
+  request: Request,
+  env: Env,
+): Promise<Response> {
   const origin = request.headers.get("Origin");
   if (origin && new URL(origin).host !== new URL(request.url).host) {
     return json(
@@ -130,4 +134,4 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
     return json({ ok: false, error: "We couldn't send that right now." }, 502);
   }
   return json({ ok: true });
-};
+}
