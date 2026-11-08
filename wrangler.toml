@@ -1,0 +1,9 @@
+# Cloudflare Pages project config (used by `wrangler pages dev/deploy`).
+name = "bits-innovate"
+compatibility_date = "2025-10-01"
+pages_build_output_dir = "out"
+
+[vars]
+CONTACT_TO = "hello@bits-innovate.com"
+CONTACT_FROM = "BITS Website <website@bits-innovate.com>"
+# RESEND_API_KEY is a secret: set it in the Pages dashboard, never here.

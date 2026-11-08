@@ -1,24 +1,22 @@
-import { Hero } from "@/components/sections/hero";
-import { Stats } from "@/components/sections/stats";
-import { ProductsShowcase } from "@/components/sections/products-showcase";
-import { FeaturesShowcase } from "@/components/sections/features-showcase";
-import { TechStack } from "@/components/sections/tech-stack";
-import { ProjectsShowcase } from "@/components/sections/projects-showcase";
-import { PartnersShowcase } from "@/components/sections/partners-showcase";
-import { BlogPreview } from "@/components/sections/blog-preview";
 import { CTA } from "@/components/sections/cta";
+import { Hero } from "@/components/sections/hero";
+import { IndustriesPreview } from "@/components/sections/industries-preview";
+import { Pillars } from "@/components/sections/pillars";
+import { Principles } from "@/components/sections/principles";
+import { Process } from "@/components/sections/process";
+import { ServicesGrid } from "@/components/sections/services-grid";
+import { StandardsMarquee } from "@/components/sections/standards-marquee";
 
-export default function HomePage() {
+export default function Home() {
   return (
     <>
       <Hero />
-      <Stats />
-      <ProductsShowcase />
-      <FeaturesShowcase />
-      <ProjectsShowcase />
-      <TechStack />
-      <PartnersShowcase />
-      <BlogPreview />
+      <StandardsMarquee />
+      <Pillars />
+      <ServicesGrid />
+      <Principles />
+      <Process />
+      <IndustriesPreview />
       <CTA />
     </>
   );
