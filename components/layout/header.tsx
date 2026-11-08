@@ -1,227 +1,233 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import { ChevronDown, Menu, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, ChevronDown } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { useEffect, useState } from "react";
+import { Logo } from "@/components/ui/logo";
+import { cn } from "@/lib/cn";
+import { pillars, services } from "@/lib/services";
+import { nav } from "@/lib/site";
 
-type NavigationChild = {
-  name: string;
-  href: string;
-  description?: string;
-};
-
-type NavigationItem = {
-  name: string;
-  href: string;
-  children?: NavigationChild[];
-};
-
-const navigation: NavigationItem[] = [
-  { name: "About", href: "/about" },
-  {
-    name: "Products",
-    href: "/products",
-    children: [
-      { name: "Tick8 Plus", href: "/products/tick8plus", description: "AI-Native Event Ticketing" },
-      { name: "X-Pay (Xara)", href: "/products/xpay", description: "AI Banking Assistant" },
-      { name: "My Watchman", href: "/products/my-watchman", description: "Emergency Response Platform" },
-    ],
-  },
-  {
-    name: "Solutions",
-    href: "/solutions",
-    children: [
-      { name: "Fintech Development", href: "/solutions/fintech" },
-      { name: "Government Services", href: "/solutions/government" },
-      { name: "AI Integration", href: "/solutions/ai" },
-      { name: "Mobile Apps", href: "/solutions/mobile" },
-      { name: "Enterprise Software", href: "/solutions/enterprise" },
-      { name: "Cloud & DevOps", href: "/solutions/cloud" },
-    ],
-  },
-  { name: "Portfolio", href: "/portfolio" },
-  { name: "Technologies", href: "/technologies" },
-  { name: "Blog", href: "/blog" },
-  { name: "Careers", href: "/careers" },
-];
+const pillarOrder = ["secure", "continue", "build"] as const;
 
 export function Header() {
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const pathname = usePathname();
+  const [scrolled, setScrolled] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [megaOpen, setMegaOpen] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 10);
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    const onScroll = () => setScrolled(window.scrollY > 12);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  // Close menus on navigation.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: run on route change
+  useEffect(() => {
+    setMobileOpen(false);
+    setMegaOpen(false);
+  }, [pathname]);
+
+  useEffect(() => {
+    document.body.style.overflow = mobileOpen ? "hidden" : "";
+  }, [mobileOpen]);
+
+  const isActive = (href: string) => pathname?.startsWith(href);
 
   return (
     <header
       className={cn(
-        "fixed top-0 z-50 w-full transition-all duration-300",
-        isScrolled
-          ? "bg-white/80 backdrop-blur-lg shadow-md"
-          : "bg-transparent"
+        "fixed inset-x-0 top-0 z-50 transition-all duration-300",
+        scrolled || mobileOpen
+          ? "border-b border-line bg-ink/80 backdrop-blur-xl"
+          : "border-b border-transparent",
       )}
     >
-      <nav className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex h-20 items-center justify-between">
-          {/* Logo */}
-          <Link href="/" className="flex items-center space-x-2">
-            <div className="relative">
-              <div className="h-10 w-10 rounded-lg bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center">
-                <span className="text-white font-bold text-xl">B</span>
-              </div>
-            </div>
-            <div className="hidden sm:block">
-              <div className="text-lg font-bold text-slate-900">BITS</div>
-              <div className="text-xs text-slate-600">Building Innovation</div>
-            </div>
-          </Link>
+      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+        <Link href="/" aria-label="BITS home" className="shrink-0">
+          <Logo />
+        </Link>
 
-          {/* Desktop Navigation */}
-          <div className="hidden lg:flex lg:items-center lg:space-x-1">
-            {navigation.map((item) => (
-              <div key={item.name} className="relative">
-                {item.children ? (
-                  <div
-                    onMouseEnter={() => setOpenDropdown(item.name)}
-                    onMouseLeave={() => setOpenDropdown(null)}
-                  >
-                    <button
-                      className={cn(
-                        "flex items-center space-x-1 px-4 py-2 rounded-lg text-sm font-medium transition-colors",
-                        pathname.startsWith(item.href)
-                          ? "text-blue-600 bg-blue-50"
-                          : "text-slate-700 hover:text-blue-600 hover:bg-slate-50"
-                      )}
-                    >
-                      <span>{item.name}</span>
-                      <ChevronDown className="h-4 w-4" />
-                    </button>
-
-                    <AnimatePresence>
-                      {openDropdown === item.name && (
-                        <motion.div
-                          initial={{ opacity: 0, y: 10 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          exit={{ opacity: 0, y: 10 }}
-                          transition={{ duration: 0.2 }}
-                          className="absolute left-0 mt-2 w-72 rounded-xl bg-white shadow-xl border border-slate-200 py-2"
-                        >
-                          {item.children.map((child) => (
-                            <Link
-                              key={child.href}
-                              href={child.href}
-                              className="block px-4 py-3 hover:bg-slate-50 transition-colors"
-                            >
-                              <div className="font-medium text-slate-900">
-                                {child.name}
-                              </div>
-                              {child.description && (
-                                <div className="text-sm text-slate-600 mt-0.5">
-                                  {child.description}
-                                </div>
-                              )}
-                            </Link>
-                          ))}
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </div>
-                ) : (
-                  <Link
-                    href={item.href}
+        <nav aria-label="Main" className="hidden items-center gap-1 lg:flex">
+          {nav.map((item) =>
+            item.label === "Services" ? (
+              // biome-ignore lint/a11y/noStaticElementInteractions: hover enhancement; keyboard users use the inner buttons
+              <div
+                key={item.href}
+                className="relative"
+                onMouseEnter={() => setMegaOpen(true)}
+                onMouseLeave={() => setMegaOpen(false)}
+              >
+                <button
+                  type="button"
+                  aria-expanded={megaOpen}
+                  aria-haspopup="true"
+                  onClick={() => setMegaOpen((v) => !v)}
+                  className={cn(
+                    "inline-flex items-center gap-1 rounded-full px-4 py-2 text-sm transition-colors hover:text-fg",
+                    isActive(item.href) ? "text-fg" : "text-muted",
+                  )}
+                >
+                  Services
+                  <ChevronDown
                     className={cn(
-                      "px-4 py-2 rounded-lg text-sm font-medium transition-colors",
-                      pathname === item.href
-                        ? "text-blue-600 bg-blue-50"
-                        : "text-slate-700 hover:text-blue-600 hover:bg-slate-50"
+                      "h-3.5 w-3.5 transition-transform",
+                      megaOpen && "rotate-180",
                     )}
-                  >
-                    {item.name}
-                  </Link>
-                )}
+                    aria-hidden="true"
+                  />
+                </button>
+                <AnimatePresence>
+                  {megaOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 8 }}
+                      transition={{ duration: 0.18 }}
+                      className="absolute left-1/2 top-full w-[860px] -translate-x-1/2 pt-3"
+                    >
+                      <div className="grid grid-cols-3 gap-2 rounded-2xl border border-line-strong bg-ink-2/95 p-3 shadow-2xl shadow-black/60 backdrop-blur-xl">
+                        {pillarOrder.map((p) => (
+                          <div key={p} className="p-2">
+                            <p className="px-3 pb-2 font-mono text-[11px] uppercase tracking-[0.16em] text-dim">
+                              {pillars[p].verb}
+                            </p>
+                            {services
+                              .filter((s) => s.pillar === p)
+                              .map((s) => (
+                                <Link
+                                  key={s.slug}
+                                  href={`/services/${s.slug}/`}
+                                  className="group flex gap-3 rounded-xl px-3 py-2.5 transition-colors hover:bg-white/5"
+                                >
+                                  <s.icon
+                                    className="mt-0.5 h-4 w-4 shrink-0 text-muted transition-colors group-hover:text-signal"
+                                    aria-hidden="true"
+                                  />
+                                  <span>
+                                    <span className="block text-sm text-fg">
+                                      {s.name}
+                                    </span>
+                                  </span>
+                                </Link>
+                              ))}
+                          </div>
+                        ))}
+                        <Link
+                          href="/services/"
+                          className="col-span-3 flex items-center justify-between rounded-xl border border-line px-5 py-3 text-sm text-muted transition-colors hover:border-line-strong hover:text-fg"
+                        >
+                          <span>All services and how we engage</span>
+                          <span className="font-mono text-xs text-signal">
+                            →
+                          </span>
+                        </Link>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
-            ))}
-          </div>
-
-          {/* CTA Button */}
-          <div className="hidden lg:flex lg:items-center lg:space-x-4">
-            <Button asChild variant="default" size="lg" className="bg-gradient-to-r from-blue-600 to-purple-600">
-              <Link href="/contact">Start Your Project</Link>
-            </Button>
-          </div>
-
-          {/* Mobile menu button */}
-          <button
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="lg:hidden p-2 rounded-lg text-slate-700 hover:bg-slate-100"
-          >
-            {mobileMenuOpen ? (
-              <X className="h-6 w-6" />
             ) : (
-              <Menu className="h-6 w-6" />
+              <Link
+                key={item.href}
+                href={item.href}
+                className={cn(
+                  "rounded-full px-4 py-2 text-sm transition-colors hover:text-fg",
+                  isActive(item.href) ? "text-fg" : "text-muted",
+                )}
+              >
+                {item.label}
+              </Link>
+            ),
+          )}
+        </nav>
+
+        <div className="flex items-center gap-2">
+          <Link
+            href="/contact/"
+            className="hidden rounded-full bg-signal px-4 py-2 text-sm font-medium text-ink transition-colors hover:bg-white sm:inline-flex"
+          >
+            Talk to us
+          </Link>
+          <button
+            type="button"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-line text-fg lg:hidden"
+            aria-label={mobileOpen ? "Close menu" : "Open menu"}
+            aria-expanded={mobileOpen}
+            onClick={() => setMobileOpen((v) => !v)}
+          >
+            {mobileOpen ? (
+              <X className="h-5 w-5" />
+            ) : (
+              <Menu className="h-5 w-5" />
             )}
           </button>
         </div>
+      </div>
 
-        {/* Mobile Navigation */}
-        <AnimatePresence>
-          {mobileMenuOpen && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              className="lg:hidden border-t border-slate-200 py-4"
+      <AnimatePresence>
+        {mobileOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "calc(100dvh - 4rem)" }}
+            exit={{ opacity: 0, height: 0 }}
+            className="overflow-y-auto border-t border-line bg-ink lg:hidden"
+          >
+            <nav
+              aria-label="Mobile"
+              className="flex flex-col gap-8 px-4 py-8 sm:px-6"
             >
-              <div className="space-y-2">
-                {navigation.map((item) => (
-                  <div key={item.name}>
+              {pillarOrder.map((p) => (
+                <div key={p}>
+                  <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-dim">
+                    {pillars[p].verb}
+                  </p>
+                  <ul className="mt-3 space-y-1">
+                    {services
+                      .filter((s) => s.pillar === p)
+                      .map((s) => (
+                        <li key={s.slug}>
+                          <Link
+                            href={`/services/${s.slug}/`}
+                            className="flex items-center gap-3 py-2 text-fg"
+                          >
+                            <s.icon
+                              className="h-4 w-4 text-signal"
+                              aria-hidden="true"
+                            />
+                            {s.name}
+                          </Link>
+                        </li>
+                      ))}
+                  </ul>
+                </div>
+              ))}
+              <ul className="space-y-1 border-t border-line pt-6">
+                {nav.map((item) => (
+                  <li key={item.href}>
                     <Link
                       href={item.href}
-                      onClick={() => setMobileMenuOpen(false)}
-                      className={cn(
-                        "block px-4 py-2 rounded-lg text-sm font-medium",
-                        pathname === item.href
-                          ? "text-blue-600 bg-blue-50"
-                          : "text-slate-700 hover:bg-slate-50"
-                      )}
+                      className="block py-2 text-2xl font-medium"
                     >
-                      {item.name}
+                      {item.label}
                     </Link>
-                    {item.children && (
-                      <div className="ml-4 mt-2 space-y-2">
-                        {item.children.map((child) => (
-                          <Link
-                            key={child.href}
-                            href={child.href}
-                            onClick={() => setMobileMenuOpen(false)}
-                            className="block px-4 py-2 text-sm text-slate-600 hover:text-blue-600"
-                          >
-                            {child.name}
-                          </Link>
-                        ))}
-                      </div>
-                    )}
-                  </div>
+                  </li>
                 ))}
-                <Button asChild className="w-full mt-4 bg-gradient-to-r from-blue-600 to-purple-600">
-                  <Link href="/contact">Start Your Project</Link>
-                </Button>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </nav>
+              </ul>
+              <Link
+                href="/contact/"
+                className="rounded-full bg-signal px-5 py-3 text-center font-medium text-ink"
+              >
+                Talk to us
+              </Link>
+            </nav>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </header>
   );
 }
