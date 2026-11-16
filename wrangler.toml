@@ -16,6 +16,10 @@ not_found_handling = "404-page"
 [observability]
 enabled = true
 
+[[kv_namespaces]]
+binding = "CERTIFICATES"
+id = "19414578031e4c9689af7fb974f44ebb"
+
 [vars]
 CONTACT_TO = "hello@bits-innovate.com"
 CONTACT_FROM = "BITS Website <website@bits-innovate.com>"

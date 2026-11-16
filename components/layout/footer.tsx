@@ -9,6 +9,7 @@ const company = [
   { label: "Industries", href: "/industries/" },
   { label: "Contact", href: "/contact/" },
   { label: "Responsible disclosure", href: "/security/" },
+  { label: "Verify a certificate", href: "/verify/" },
   { label: "Privacy", href: "/privacy/" },
 ];
 
