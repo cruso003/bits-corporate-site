@@ -1,9 +1,17 @@
 /**
- * GET /api/verify?code=BITS-VER-XXXX
+ * GET /api/verify?code=BITS-VER-XXXXXXXX
  *
  * Looks up a certificate reference code in the CERTIFICATES KV namespace
  * and returns what BITS actually issued, so a code printed on a PDF can be
  * checked against our own record rather than trusted on the page's say-so.
+ *
+ * Codes must be random, not sequential. BITS-VER-0001/0002/... would let
+ * anyone holding one real code enumerate every other client's record just
+ * by incrementing it, exposing company names and engagement details they
+ * have no business seeing. Generate each new code as 8 random characters
+ * from an unambiguous alphabet (no 0/O/1/I/L), e.g.:
+ *   python3 -c "import secrets; a='23456789ABCDEFGHJKMNPQRSTUVWXYZ'; \
+ *     print('BITS-VER-' + ''.join(secrets.choice(a) for _ in range(8)))"
  *
  * Env:
  *   CERTIFICATES  KV namespace binding (Workers & Pages → bits-corporate-site
