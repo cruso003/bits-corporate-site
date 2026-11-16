@@ -76,7 +76,7 @@ export function VerifyForm() {
             autoCapitalize="characters"
             spellCheck={false}
             className={field}
-            placeholder="BITS-VER-0001"
+            placeholder="BITS-VER-XXXX"
           />
         </label>
         <button

@@ -1,5 +1,5 @@
 /**
- * GET /api/verify?code=BITS-VER-0001
+ * GET /api/verify?code=BITS-VER-XXXX
  *
  * Looks up a certificate reference code in the CERTIFICATES KV namespace
  * and returns what BITS actually issued, so a code printed on a PDF can be
