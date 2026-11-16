@@ -13,6 +13,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "contact/",
     "security/",
     "privacy/",
+    "verify/",
   ];
   return [
     ...pages.map((p) => ({

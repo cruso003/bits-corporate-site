@@ -3,6 +3,7 @@
  * before this code runs; only requests that match no file reach fetch().
  */
 import { type Env, handleContact, json } from "./contact";
+import { handleVerify } from "./verify";
 
 export default {
   async fetch(request, env): Promise<Response> {
@@ -13,6 +14,13 @@ export default {
         return json({ ok: false, error: "Method not allowed." }, 405);
       }
       return handleContact(request, env);
+    }
+
+    if (pathname === "/api/verify" || pathname === "/api/verify/") {
+      if (request.method !== "GET") {
+        return json({ ok: false, error: "Method not allowed." }, 405);
+      }
+      return handleVerify(request, env);
     }
 
     return env.ASSETS.fetch(request);
